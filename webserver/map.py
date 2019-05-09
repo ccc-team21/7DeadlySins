@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def my_map():
-    return render_template('melbourne.html')
+    return render_template('map.html')
 
 @app.route('/linechart')
 def my_linechart():
