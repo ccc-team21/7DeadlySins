@@ -17,154 +17,22 @@
         var myChart = echarts.init(document.getElementById('main'));
         myChart.showLoading();
 
+        var twitterdata = JSON.parse('{{ twitterdata|safe }}');
+
+        var aurindata = JSON.parse('{{ aurindata|safe }}');
+
+        var instagramdata = JSON.parse('{{ instagramdata|safe }}');
+
         $.get('/static/melb_geojson.json', function (geoJson) {
             myChart.hideLoading();
 
             echarts.registerMap('melb_geojson', geoJson);
 
-            var twitterdata = [
-                {'name': 'Cremorne', 'value': 0} ,
-                {'name': 'Caulfield', 'value': 2} ,
-                {'name': 'Carnegie', 'value': 4} ,
-                {'name': 'Kingsville', 'value': 6} ,
-                {'name': 'South Kingsville', 'value': 8} ,
-                {'name': 'Tottenham', 'value': 10} ,
-                {'name': 'Balaclava', 'value': 12} ,
-                {'name': 'Fitzroy North', 'value': 14} ,
-                {'name': 'Kingsbury', 'value': 16} ,
-                {'name': 'Gardenvale', 'value': 18} ,
-                {'name': 'Windsor', 'value': 20} ,
-                {'name': 'Caulfield South', 'value': 22} ,
-                {'name': 'Maidstone', 'value': 24} ,
-                {'name': 'Hawthorn', 'value': 26} ,
-                {'name': 'Prahran', 'value': 28} ,
-                {'name': 'Essendon North', 'value': 30} ,
-                {'name': 'Seddon', 'value': 32} ,
-                {'name': 'Airport West', 'value': 34} ,
-                {'name': 'Black Rock', 'value': 36} ,
-                {'name': 'Williamstown North', 'value': 38} ,
-                {'name': 'Northcote', 'value': 40} ,
-                {'name': 'Fairfield', 'value': 42} ,
-                {'name': 'Thornbury', 'value': 44} ,
-                {'name': 'Princes Hill', 'value': 46} ,
-                {'name': 'Clifton Hill', 'value': 48} ,
-                {'name': 'Abbotsford', 'value': 50} ,
-                {'name': 'Brunswick East', 'value': 52} ,
-                {'name': 'Collingwood', 'value': 54} ,
-                {'name': 'Fitzroy', 'value': 56} ,
-                {'name': 'Brunswick', 'value': 58} ,
-                {'name': 'Carlton North', 'value': 60} ,
-                {'name': 'Carlton', 'value': 62} ,
-                {'name': 'Parkville', 'value': 64} ,
-                {'name': 'Melbourne (3000)', 'value': 66} ,
-                {'name': 'Armadale', 'value': 68} ,
-                {'name': 'Balwyn North', 'value': 70} ,
-                {'name': 'Toorak', 'value': 72} ,
-                {'name': 'Kooyong', 'value': 74} ,
-                {'name': 'Burnley', 'value': 76} ,
-                {'name': 'Kew East', 'value': 78} ,
-                {'name': 'Deepdene', 'value': 80} ,
-                {'name': 'Kew', 'value': 82} ,
-                {'name': 'Canterbury', 'value': 84} ,
-                {'name': 'Camberwell', 'value': 86} ,
-                {'name': 'Hawthorn East', 'value': 88} ,
-                {'name': 'Southbank', 'value': 90} ,
-                {'name': 'South Wharf', 'value': 92} ,
-                {'name': 'Ormond', 'value': 94} ,
-                {'name': 'Balwyn', 'value': 96} ,
-                {'name': 'Preston', 'value': 98} ,
-                {'name': 'Elwood', 'value': 100} ,
-                {'name': 'Docklands', 'value': 102} ,
-                {'name': 'Richmond', 'value': 104} ,
-                {'name': 'East Melbourne', 'value': 106} ,
-                {'name': 'South Yarra', 'value': 108} ,
-                {'name': 'Middle Park', 'value': 110} ,
-                {'name': 'Glen Iris', 'value': 112} ,
-                {'name': 'North Melbourne', 'value': 114} ,
-                {'name': 'Hadfield', 'value': 116} ,
-                {'name': 'Caulfield North', 'value': 118} ,
-                {'name': 'Brunswick West', 'value': 120} ,
-                {'name': 'Coburg North', 'value': 122} ,
-                {'name': 'Malvern East', 'value': 124} ,
-                {'name': 'Reservoir', 'value': 126} ,
-                {'name': 'Malvern', 'value': 128} ,
-                {'name': 'Glen Huntly', 'value': 130} ,
-                {'name': 'Coburg', 'value': 132} ,
-                {'name': 'Fawkner', 'value': 134} ,
-                {'name': 'Ashburton', 'value': 136} ,
-                {'name': 'Pascoe Vale South', 'value': 138} ,
-                {'name': 'Caulfield East', 'value': 140} ,
-                {'name': 'Travancore', 'value': 142} ,
-                {'name': 'Pascoe Vale', 'value': 144} ,
-                {'name': 'St Kilda East', 'value': 146} ,
-                {'name': 'South Melbourne', 'value': 148} ,
-                {'name': 'Essendon', 'value': 150} ,
-                {'name': 'Flemington', 'value': 152} ,
-                {'name': 'Albert Park', 'value': 154} ,
-                {'name': 'Murrumbeena', 'value': 156} ,
-                {'name': 'St Kilda', 'value': 158} ,
-                {'name': 'Glenroy', 'value': 160} ,
-                {'name': 'Kensington', 'value': 162} ,
-                {'name': 'Ripponlea', 'value': 164} ,
-                {'name': 'Hughesdale', 'value': 166} ,
-                {'name': 'St Kilda West', 'value': 168} ,
-                {'name': 'Strathmore', 'value': 170} ,
-                {'name': 'Moonee Ponds', 'value': 172} ,
-                {'name': 'Aberfeldie', 'value': 174} ,
-                {'name': 'Oak Park', 'value': 176} ,
-                {'name': 'Ascot Vale', 'value': 178} ,
-                {'name': 'Elsternwick', 'value': 180} ,
-                {'name': 'West Melbourne', 'value': 182} ,
-                {'name': 'Essendon Fields', 'value': 184} ,
-                {'name': 'McKinnon', 'value': 186} ,
-                {'name': 'Gowanbrae', 'value': 188} ,
-                {'name': 'Strathmore Heights', 'value': 190} ,
-                {'name': 'Bentleigh', 'value': 192} ,
-                {'name': 'Brighton East', 'value': 194} ,
-                {'name': 'Footscray', 'value': 196} ,
-                {'name': 'Port Melbourne', 'value': 198} ,
-                {'name': 'Maribyrnong', 'value': 200} ,
-                {'name': 'Bentleigh East', 'value': 202} ,
-                {'name': 'Brighton', 'value': 204} ,
-                {'name': 'Essendon West', 'value': 206} ,
-                {'name': 'Seaholme', 'value': 208} ,
-                {'name': 'Niddrie', 'value': 210} ,
-                {'name': 'Hampton East', 'value': 212} ,
-                {'name': 'Yarraville', 'value': 214} ,
-                {'name': 'Spotswood', 'value': 216} ,
-                {'name': 'Hampton', 'value': 218} ,
-                {'name': 'Newport', 'value': 220} ,
-                {'name': 'Avondale Heights', 'value': 222} ,
-                {'name': 'West Footscray', 'value': 224} ,
-                {'name': 'Braybrook', 'value': 226} ,
-                {'name': 'Beaumaris', 'value': 228} ,
-                {'name': 'Williamstown', 'value': 230} ,
-                {'name': 'Sandringham', 'value': 232} ,
-                {'name': 'Altona North', 'value': 234} ,
-                {'name': 'Altona', 'value': 236} ,
-                {'name': 'Altona Meadows', 'value': 238} ,
-                {'name': 'Seabrook', 'value': 240} ,
-                {'name': 'Melbourne (3004)', 'value': 242}];
-
-           var aurindata = [
-                {'name': 'Cremorne', 'value': 100} ,
-                {'name': 'Caulfield', 'value': 20} ,
-                {'name': 'Carnegie', 'value': 50} ,
-                {'name': 'Kingsville', 'value': 60}];
-
-           var instagramdata = [
-                {'name': 'Cremorne', 'value': 200} ,
-                {'name': 'Caulfield', 'value': 300} ,
-                {'name': 'Carnegie', 'value': 500} ,
-                {'name': 'Kingsville', 'value': 700}];
-
-
             option = {
                 title: {
                     text: 'Group 21 Sentimental Analysis',
-                    subtext: 'Data from Twitter',
-                    sublink: 'https://twitter.com'
-
+                    subtext: 'Click me',
+                    sublink: 'http://127.0.0.1:5000/linechart'
                 },
                 tooltip: {
                     trigger: 'item',
@@ -179,7 +47,7 @@
                 legend: {
                   data: ['Twitter Data', 'Aurin Data', 'Instagram Data'],
                   left: 'center',
-                  top: 40
+                  top: 30
                   },
 
                 visualMap: {

@@ -16,29 +16,30 @@
         var myChart = echarts.init(document.getElementById('main'));
 
 
+        var twitterdata = {{ twitterdata }};
 
-        var twitterdata = [24, 45, 40, 100];
+        var aurindata = {{ aurindata }};
 
+        var instagramdata = {{ instagramdata }};
 
-        var aurindata = [100, 20, 50, 60];
-
-
-        var instagramdata = [20, 100, 300, 30];
+        var xlabel = {{ xlabel|safe }};
 
 
         var option = {
                 title: {
-                    text: 'Group 21 Sentimental Analysis'
+                    text: 'Group 21 Sentimental Analysis',
+                    subtext: 'Click me',
+                    sublink: 'http://127.0.0.1:5000'
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
                     data: ['Twitter Data', 'Aurin Data', 'Instagram Data'],
-                    left: 'center',
-                    top: 30
+                    top: 40
                 },
                 grid: {
+                    top: '15%',
                     left: '3%',
                     right: '4%',
                     bottom: '3%',
@@ -52,7 +53,7 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: ['Cremorne','Caulfield','Carnegie','Kingsville']
+                    data: xlabel
                 },
                 yAxis: {
                     type: 'value'
