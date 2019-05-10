@@ -1,18 +1,19 @@
-from flask import Flask,render_template
+from flask import Flask, render_template
 import json
 import couchdb
 
 app = Flask(__name__)
 
 
-def getDoc(database_name):
+def getdoc(database_name):
     couch = couchdb.Server('http://Yanli:muzifeng1021@127.0.0.1:5984')
     db = couch[database_name]
     doc = db['0d99472d9fd2d79461528599f304bccb']
     return doc
 
-def queryDb(database_name):
-    doc = getDoc(database_name)
+
+def querydb(database_name):
+    doc = getdoc(database_name)
     lis = []
     for i in range(122):
         i += 1
@@ -26,8 +27,9 @@ def queryDb(database_name):
         lis.append(content)
     return lis
 
-def getData(database_name, value):
-    doc = queryDb(database_name)
+
+def getdata(database_name, value):
+    doc = querydb(database_name)
     data_list = []
     if value == "value":
         for each in doc:
@@ -40,7 +42,7 @@ def getData(database_name, value):
 
 @app.route('/')
 def my_map():
-    twitterdata = queryDb("twitter")
+    twitterdata = querydb("twitter")
     aurindata = [
         {'name': 'Cremorne', 'value': 100},
         {'name': 'Caulfield', 'value': 20},
@@ -57,17 +59,15 @@ def my_map():
                            instagramdata=json.dumps(instagramdata))
 
 
-
 @app.route('/linechart')
 def my_linechart():
 
-
-    twitterdata = getData("twitter", "value")
+    twitterdata = getdata("twitter", "value")
 
     aurindata = [100, 20, 50, 60]
     instagramdata = [20, 100, 300, 30]
 
-    xlabel = getData("twitter", "name")
+    xlabel = getdata("twitter", "name")
 
     return render_template('linechart.html', twitterdata=twitterdata, aurindata=aurindata,
                            instagramdata=instagramdata, xlabel=xlabel)
