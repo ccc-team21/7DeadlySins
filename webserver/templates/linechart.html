@@ -18,7 +18,7 @@ Team Members:
   </head>
 
   <body>
-    <div id="main" style="width:1400px;height:800px;">
+    <div id="main" style="width:1400px;height:800px">
     </div>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
     </script>
@@ -42,7 +42,7 @@ Team Members:
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ['Aurin Data', 'Lust Data', 'Pride Data'],
+                    data: ['Richness(AURIN)', 'Lust Factor(SOCIALMEDIA)', 'Pride Factor(SOCIALMEDIA)'],
                     top: 40
                 },
                 grid: {
@@ -65,25 +65,26 @@ Team Members:
                 yAxis: {
                     type: 'value'
                 },
+
                 series: [
                  {
-                    name: 'Aurin Data',
+                    name: 'Richness(AURIN)',
                     type: 'line',
                     stack: 'score',
                     data: aurindata
                 },
                 {
-                    name: 'Lust Data',
+                    name: 'Lust Factor(SOCIALMEDIA)',
                     type: 'line',
                     stack: 'score',
                     data: lustdata
                 },
 
                  {
-                    name: 'Pride Data',
+                    name: 'Pride Factor(SOCIALMEDIA)',
                     type: 'line',
                     stack: 'score',
-                    data:pridedata
+                    data: pridedata
                   }]
         };
 
