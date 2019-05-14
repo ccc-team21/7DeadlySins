@@ -19,7 +19,7 @@ api = Api(app)
 
 
 def getdb(database_name):
-    couch = couchdb.Server('http://admin:admin@172.26.38.106:5984')
+    couch = couchdb.Server('http://admin:admin@103.6.254.147:5984')
     db = couch[database_name]
     return db
 
