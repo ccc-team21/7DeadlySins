@@ -49,7 +49,7 @@ def getdata(database_name, value):
             data_list.append(each["value"])
     else:
         for each in lis:
-            data_list.append(each["name"])
+            data_list.append(str(each["name"]))
     return data_list
 
 @app.route('/')
