@@ -9,10 +9,10 @@ Team Members:
     Yan Li – 984120
 '''
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 import json
 import couchdb
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api, Resource
 
 app = Flask(__name__)
 api = Api(app)
