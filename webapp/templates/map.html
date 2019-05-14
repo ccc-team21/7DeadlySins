@@ -9,24 +9,29 @@ Team Members:
     Yan Li – 984120
 -->
 <!DOCTYPE html>
+
 <html style="height: 100%">
 
 <head>
+
     <meta charset="utf-8">
+
     <title>CCC Project - Team 21: Map</title>
+
     <style type="text/css">
         body {
             font-family: verdana;
             background-color: rgb(247, 247, 247);
         }
 
+/* Display*/
         #wrapper {
             display: grid;
             grid-gap: 1% 2%;
             grid-template-rows: 100px 610px;
             grid-template-columns: 23% 5% 17% 17% 5% 23%;
             grid-template-areas:
-                "logo . title title . ."
+                "logo title title title title ."
                 "back map map map map chart"
         }
 
@@ -44,24 +49,24 @@ Team Members:
             text-align: center;
             top: 0px;
             margin-top: 0px;
-            padding-top: 15px;
-            font-size: 50px;
+            padding-top: 5px;
+            font-size: 40px;
             font-weight: bold;
-            border: 1px solid rgba(0, 0, 0, 0.8);
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
         }
 
         #container3 {
             grid-area: chart;
-            margin-top: 170px;
+            margin-top: 260px;
             text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.8);
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
         }
 
         #container4 {
             grid-area: back;
-            margin-top: 160px;
+            margin-top: 250px;
             text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.8);
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
         }
 
         #main {
@@ -71,7 +76,6 @@ Team Members:
             margin-top: 0;
             margin-left: 0;
             margin-right: 0;
-
             border: 1px solid rgba(0, 0, 0, 0.8);
         }
 
@@ -88,32 +92,57 @@ Team Members:
             margin: 4px 2px;
             cursor: pointer;
         }
+
     </style>
+
 </head>
 
 <body style="height: 100%; margin: 0">
+
     <div id="wrapper">
+
+<!-- Logo -->
         <div id="container1" class="one">
+
             <img src="/static/Unimelb.jpeg" width="160" , height="150">
+
         </div>
+
+<!-- Title -->
         <div id="container2" class="two">
-            <section>Story Map</section>
+
+            <section>Richness vs. Lust vs. Pride <br> Map</section>
 
         </div>
 
+<!-- Right Button -->
         <div id="container3" class="three">
+
             <a href="http://127.0.0.1:5000/linechart" class="button">Chart >></a>
+
         </div>
 
+<!-- Left Button -->
         <div id="container4" class="four">
+
             <a href="http://127.0.0.1:5000/" class="button">
-                << Back</a> </div> <div id="main" style="height: 100%">
+                << Back</a> 
+
+        </div> 
+
+<!-- Map -->
+        <div id="main" style="height: 100%">
         </div>
+
     </div>
+
+<!-- Echarts JS Map -->
     <script type="text/javascript" src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js">
     </script>
+
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
     </script>
+
     <script type="text/javascript">
         var myChart = echarts.init(document.getElementById('main'));
         myChart.showLoading();
@@ -225,6 +254,7 @@ Team Members:
 
             myChart.setOption(option);
         });
+        
     </script>
 
 </body>
