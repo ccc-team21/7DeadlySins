@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <title>CCC Project - Team 21: Map</title>
+    <style type="text/css">
+        body {
+            font-family: verdana;
+            background-color: rgb(247, 247, 247);
+        }
+
+        #wrapper {
+            display: grid;
+            grid-gap: 1% 2%;
+            grid-template-rows: 100px 610px;
+            grid-template-columns: 23% 5% 17% 17% 5% 23%;
+            grid-template-areas:
+                "logo . title title . ."
+                "back map map map map chart"
+        }
+
+        #container1 {
+            grid-area: logo;
+            text-align: left;
+            padding: 5px;
+            padding-left: 20px;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #container2 {
+            grid-area: title;
+            color: blue;
+            text-align: center;
+            top: 0px;
+            margin-top: 0px;
+            padding-top: 15px;
+            font-size: 50px;
+            font-weight: bold;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        #container3 {
+            grid-area: chart;
+            margin-top: 170px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        #container4 {
+            grid-area: back;
+            margin-top: 160px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        #main {
+            grid-area: map;
+            color: blue;
+            text-align: center;
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: 0;
+
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        .button {
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 15px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body style="height: 100%; margin: 0">
+    <div id="wrapper">
+        <div id="container1" class="one">
+            <img src="file:/C:/Users/luizf/webapp/Unimelb.jpeg" width="160" , height="150">
+        </div>
+        <div id="container2" class="two">
+            <section>Story Map</section>
+
+        </div>
+
+        <div id="container3" class="three">
+            <a href="http://127.0.0.1:5000/linechart" class="button">Chart >></a>
+        </div>
+
+        <div id="container4" class="four">
+            <a href="http://127.0.0.1:5000/" class="button">
+                << Back</a> </div> <div id="main">
+        </div>
+    </div>
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
+    </script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        myChart.showLoading();
+
+        var twitterdata = JSON.parse('{{ twitterdata|safe }}');
+
+        var aurindata = JSON.parse('{{ aurindata|safe }}');
+
+        var instagramdata = JSON.parse('{{ instagramdata|safe }}');
+
+        $.get('/static/melb_geojson.json', function (geoJson) {
+            myChart.hideLoading();
+
+            echarts.registerMap('melb_geojson', geoJson);
+
+            option = {
+                calculable: 'true',
+                tooltip: {
+                    trigger: 'item',
+                    showDelay: 0,
+                    transitionDuration: 0.2,
+                    formatter: function (params) {
+                        var value = (params.value + '').split('.');
+                        value = value[0].replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g, '$1,');
+                        return params.seriesName + '<br/>' + params.name + ': ' + value;
+                    }
+                },
+                legend: {
+                    data: ['Twitter Data', 'Aurin Data', 'Instagram Data'],
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 10
+                },
+
+                visualMap: [{
+                    type: 'continuous',
+                    left: 'left',
+                    min: 0,
+                    max: 6,
+                    seriesIndex: 0,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    },
+                    text: ['High', 'Low'],
+                    calculable: false,
+                    left: 100,
+                    bottom: 50
+                },
+                {
+                    type: 'continuous',
+                    show: false,
+                    left: 'left',
+                    min: 0,
+                    max: 2,
+                    seriesIndex: 1,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    },
+                    text: ['High', 'Low'],
+                    calculable: true,
+                    left: 80,
+                    bottom: 50
+                },
+                {
+                    type: 'continuous',
+                    show: false,
+                    left: 'left',
+                    min: 0,
+                    max: 2,
+                    seriesIndex: 2,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    },
+                    text: ['High', 'Low'],
+                    calculable: true,
+                    left: 130,
+                    bottom: 50
+                }],
+
+                series: [
+                    {
+                        name: 'Twitter Data',
+                        type: 'map',
+                        roam: true,
+                        mapType: 'melb_geojson',
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
+                        },
+                        data: twitterdata
+                    },
+
+                    {
+                        name: 'Aurin Data',
+                        type: 'map',
+                        roam: true,
+                        mapType: 'melb_geojson',
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
+                        },
+                        data: aurindata
+                    },
+                    {
+                        name: 'Instagram Data',
+                        type: 'map',
+                        roam: true,
+                        mapType: 'melb_geojson',
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
+                        },
+                        data: instagramdata
+                    }]
+            };
+
+            myChart.setOption(option);
+        });
+    </script>
+
+</body>
+
+</html>
