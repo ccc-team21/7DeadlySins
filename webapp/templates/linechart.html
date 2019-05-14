@@ -9,24 +9,30 @@ Team Members:
     Yan Li – 984120
 -->
 <!DOCTYPE html>
+
 <html>
 
 <head>
+
     <meta charset="utf-8">
+
     <title>CCC Project - Team 21: Line Chart</title>
+
     <style type="text/css">
+
         body {
             font-family: verdana;
             background-color: rgb(247, 247, 247);
         }
 
+/* Display*/
         #wrapper {
             display: grid;
             grid-gap: 1% 2%;
             grid-template-rows: 100px 610px;
             grid-template-columns: 23% 5% 17% 17% 5% 23%;
             grid-template-areas:
-                "logo . title title . ."
+                "logo title title title title ."
                 "back chart chart chart chart ."
         }
 
@@ -44,27 +50,26 @@ Team Members:
             text-align: center;
             top: 0px;
             margin-top: 0px;
-            padding-top: 15px;
-            font-size: 50px;
+            padding-top: 5px;
+            font-size: 40px;
             font-weight: bold;
-            border: 1px solid rgba(0, 0, 0, 0.8);
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
         }
 
         #container3 {
             grid-area: back;
-            margin-top: 160px;
+            margin-top: 250px;
             text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.8);
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
         }
 
         #main {
-            grid-area: chart;
+            grid-area: chart;   
             color: blue;
             text-align: center;
             margin-top: 0;
             margin-left: 0;
             margin-right: 0;
-
             border: 1px solid rgba(0, 0, 0, 0.8);
         }
 
@@ -81,26 +86,46 @@ Team Members:
             margin: 4px 2px;
             cursor: pointer;
         }
+
     </style>
+
 </head>
 
 <body style="height: 100%; margin: 0">
+
     <div id="wrapper">
+
+<!-- Logo -->
         <div id="container1" class="one">
+            
             <img src="/static/Unimelb.jpeg" width="160" , height="150">
-        </div>
-        <div id="container2" class="two">
-            <section>Story Chart</section>
+
         </div>
 
-        <div id="container3" class="three">
-            <a href="http://127.0.0.1:5000/map" class="button"><< Back</a>
+<!-- Title -->
+        <div id="container2" class="two">
+
+            <section>Richness vs. Lust vs. Pride <br> Line Chart</section>
+
         </div>
+
+<!-- Left Button -->
+        <div id="container3" class="three">
+
+            <a href="http://127.0.0.1:5000/map" class="button"><< Map</a>
+
+        </div>
+
+<!-- Line Chart --> 
         <div id="main">
         </div>
+
     </div>
+
+<!-- Echarts JS Line Chart --> 
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
     </script>
+
     <script type="text/javascript">
         var myChart = echarts.init(document.getElementById('main'));
 
@@ -161,7 +186,6 @@ Team Members:
         };
 
         myChart.setOption(option);
-
     </script>
 
 </body>
