@@ -11,7 +11,7 @@ Team Members:
 <!DOCTYPE html>
 <html style="height: 100%">
 
-  <head>
+<head>
     <meta charset="utf-8">
     <title>CCC Project - Team 21: Map</title>
     <style type="text/css">
@@ -20,14 +20,14 @@ Team Members:
             background-color: rgb(247, 247, 247);
         }
 
-        #wrapper{
+        #wrapper {
             display: grid;
             grid-gap: 1% 2%;
             grid-template-rows: 100px 610px;
             grid-template-columns: 23% 5% 17% 17% 5% 23%;
             grid-template-areas:
-            "logo . title title . ."
-            "back map map map map chart"
+                "logo . title title . ."
+                "back map map map map chart"
         }
 
         #container1 {
@@ -76,43 +76,40 @@ Team Members:
         }
 
         .button {
-  background-color: blue;
-  border: none;
-  color: white;
-  padding: 15px 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 20px;
-  font-weight: bold;
-  margin: 4px 2px;
-  cursor: pointer;
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 15px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 4px 2px;
+            cursor: pointer;
         }
-
     </style>
-  </head>
+</head>
 
-  <body style="height: 100%; margin: 0">
-  	<div id="wrapper">
-    <div id="container1" class="one">
-            <img src="file:/C:/Users/luizf/webapp/Unimelb.jpeg"  width= "160", height= "150">
+<body style="height: 100%; margin: 0">
+    <div id="wrapper">
+        <div id="container1" class="one">
+            <img src="/static/Unimelb.jpeg" width="160" , height="150">
         </div>
-    <div id="container2" class="two">
+        <div id="container2" class="two">
             <section>Story Map</section>
 
         </div>
 
-    <div id="container3" class="three">
+        <div id="container3" class="three">
             <a href="http://127.0.0.1:5000/linechart" class="button">Chart >></a>
         </div>
 
-    <div id="container4" class="four">
-            <a href="http://127.0.0.1:5000/" class="button"><< Back</a>
+        <div id="container4" class="four">
+            <a href="http://127.0.0.1:5000/" class="button">
+                << Back</a> </div> <div id="main" style="height: 100%">
         </div>
-
-    <div id="main" style="height: 100%">
     </div>
-	</div>
     <script type="text/javascript" src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js">
     </script>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
@@ -141,13 +138,13 @@ Team Members:
                     }
                 },
                 legend: {
-                  data: ['Richness(AURIN)', 'Lust Factor(SOCIALMEDIA)', 'Pride Factor(SOCIALMEDIA)'],
-                  orient: 'vertical',
-                  left: 'right',
-                  top: 10
-                  },
+                    data: ['Richness(AURIN)', 'Lust Factor(SOCIALMEDIA)', 'Pride Factor(SOCIALMEDIA)'],
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 10
+                },
 
-                visualMap:[ {
+                visualMap: [{
                     type: 'continuous',
                     left: 'left',
                     top: 'bottom',
@@ -157,7 +154,7 @@ Team Members:
                     inRange: {
                         color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
                     },
-                    text:['High','Low'],
+                    text: ['High', 'Low'],
                     calculable: false,
                     left: 10,
                     bottom: 50,
@@ -173,7 +170,7 @@ Team Members:
                     inRange: {
                         color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
                     },
-                    text:['High','Low'],
+                    text: ['High', 'Low'],
                     calculable: true,
                     left: 80,
                     bottom: 50
@@ -188,20 +185,20 @@ Team Members:
                     inRange: {
                         color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
                     },
-                    text:['High','Low'],
+                    text: ['High', 'Low'],
                     calculable: true,
                     left: 130,
                     bottom: 50
                 }],
 
                 series: [
-                     {
+                    {
                         name: 'Richness(AURIN)',
                         type: 'map',
                         roam: true,
                         mapType: 'melb_geojson',
-                        itemStyle:{
-                            emphasis:{label:{show:true}}
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
                         },
                         data: aurindata
                     },
@@ -210,21 +207,21 @@ Team Members:
                         type: 'map',
                         roam: true,
                         mapType: 'melb_geojson',
-                        itemStyle:{
-                            emphasis:{label:{show:true}}
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
                         },
                         data: lustdata
                     },
-                     {
+                    {
                         name: 'Pride Factor(SOCIALMEDIA)',
                         type: 'map',
                         roam: true,
                         mapType: 'melb_geojson',
-                        itemStyle:{
-                            emphasis:{label:{show:true}}
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
                         },
                         data: pridedata
-                      }]
+                    }]
             };
 
             myChart.setOption(option);
@@ -232,4 +229,5 @@ Team Members:
     </script>
 
 </body>
+
 </html>

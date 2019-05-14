@@ -11,23 +11,23 @@ Team Members:
 <!DOCTYPE html>
 <html>
 
-  <head>
-      <meta charset="utf-8">
-      <title>CCC Project - Team 21: Line Chart</title>
-      <style type="text/css">
+<head>
+    <meta charset="utf-8">
+    <title>CCC Project - Team 21: Line Chart</title>
+    <style type="text/css">
         body {
             font-family: verdana;
             background-color: rgb(247, 247, 247);
         }
 
-        #wrapper{
+        #wrapper {
             display: grid;
             grid-gap: 1% 2%;
             grid-template-rows: 100px 610px;
             grid-template-columns: 23% 5% 17% 17% 5% 23%;
             grid-template-areas:
-            "logo . title title . ."
-            "back chart chart chart chart ."
+                "logo . title title . ."
+                "back chart chart chart chart ."
         }
 
         #container1 {
@@ -69,37 +69,35 @@ Team Members:
         }
 
         .button {
-  background-color: blue;
-  border: none;
-  color: white;
-  padding: 15px 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 20px;
-  font-weight: bold;
-  margin: 4px 2px;
-  cursor: pointer;
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 15px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 4px 2px;
+            cursor: pointer;
         }
-
     </style>
-  </head>
+</head>
 
-  <body style="height: 100%; margin: 0">
+<body style="height: 100%; margin: 0">
     <div id="wrapper">
-    <div id="container1" class="one">
-            <img src="file:/C:/Users/luizf/webapp/Unimelb.jpeg"  width= "160", height= "150">
+        <div id="container1" class="one">
+            <img src="/static/Unimelb.jpeg" width="160" , height="150">
         </div>
-    <div id="container2" class="two">
+        <div id="container2" class="two">
             <section>Story Chart</section>
-
         </div>
 
-    <div id="container3" class="three">
+        <div id="container3" class="three">
             <a href="http://127.0.0.1:5000/map" class="button"><< Back</a>
         </div>
-
-    <div id="main">
+        <div id="main">
+        </div>
     </div>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
     </script>
@@ -112,36 +110,36 @@ Team Members:
 
         var pridedata = {{ pridedata }};
 
-        var xlabel = {{ xlabel|safe }};
+        var xlabel = {{ xlabel| safe }};
 
 
         var option = {
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data: ['Richness(AURIN)', 'Lust Factor(SOCIALMEDIA)', 'Pride Factor(SOCIALMEDIA)'],
-                    top: 40
-                },
-                grid: {
-                    top: '15%',
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: xlabel
-                },
-                yAxis: {
-                    type: 'value'
-                },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Richness(AURIN)', 'Lust Factor(SOCIALMEDIA)', 'Pride Factor(SOCIALMEDIA)'],
+                top: 40
+            },
+            grid: {
+                top: '15%',
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
 
-                series: [
-                 {
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: xlabel
+            },
+            yAxis: {
+                type: 'value'
+            },
+
+            series: [
+                {
                     name: 'Richness(AURIN)',
                     type: 'line',
                     stack: 'score',
@@ -154,12 +152,12 @@ Team Members:
                     data: lustdata
                 },
 
-                 {
+                {
                     name: 'Pride Factor(SOCIALMEDIA)',
                     type: 'line',
                     stack: 'score',
                     data: pridedata
-                  }]
+                }]
         };
 
         myChart.setOption(option);
@@ -167,4 +165,5 @@ Team Members:
     </script>
 
 </body>
+
 </html>
