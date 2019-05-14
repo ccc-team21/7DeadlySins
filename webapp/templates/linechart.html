@@ -13,12 +13,93 @@ Team Members:
 
   <head>
       <meta charset="utf-8">
-      <title>Team 21 Sentiment Analysis -- Line Chart</title>
+      <title>CCC Project - Team 21: Line Chart</title>
+      <style type="text/css">
+        body {
+            font-family: verdana;
+            background-color: rgb(247, 247, 247);
+        }
 
+        #wrapper{
+            display: grid;
+            grid-gap: 1% 2%;
+            grid-template-rows: 100px 610px;
+            grid-template-columns: 23% 5% 17% 17% 5% 23%;
+            grid-template-areas:
+            "logo . title title . ."
+            "back chart chart chart chart ."
+        }
+
+        #container1 {
+            grid-area: logo;
+            text-align: left;
+            padding: 5px;
+            padding-left: 20px;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #container2 {
+            grid-area: title;
+            color: blue;
+            text-align: center;
+            top: 0px;
+            margin-top: 0px;
+            padding-top: 15px;
+            font-size: 50px;
+            font-weight: bold;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        #container3 {
+            grid-area: back;
+            margin-top: 160px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        #main {
+            grid-area: chart;
+            color: blue;
+            text-align: center;
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: 0;
+
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        .button {
+  background-color: blue;
+  border: none;
+  color: white;
+  padding: 15px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 4px 2px;
+  cursor: pointer;
+        }
+
+    </style>
   </head>
 
-  <body>
-    <div id="main" style="width:1400px;height:800px">
+  <body style="height: 100%; margin: 0">
+    <div id="wrapper">
+    <div id="container1" class="one">
+            <img src="file:/C:/Users/luizf/webapp/Unimelb.jpeg"  width= "160", height= "150">
+        </div>
+    <div id="container2" class="two">
+            <section>Story Chart</section>
+
+        </div>
+
+    <div id="container3" class="three">
+            <a href="http://127.0.0.1:5000/map" class="button"><< Back</a>
+        </div>
+
+    <div id="main">
     </div>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
     </script>
@@ -35,9 +116,6 @@ Team Members:
 
 
         var option = {
-                title: {
-                    text: 'Team 21 Sentiment Analysis'
-                },
                 tooltip: {
                     trigger: 'axis'
                 },
@@ -52,11 +130,7 @@ Team Members:
                     bottom: '3%',
                     containLabel: true
                 },
-                toolbox: {
-                    feature: {
-                        saveAsImage: {}
-                    }
-                },
+                
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,

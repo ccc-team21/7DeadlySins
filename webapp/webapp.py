@@ -52,8 +52,11 @@ def getdata(database_name, value):
             data_list.append(each["name"])
     return data_list
 
-
 @app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/map')
 def my_map():
     aurindata = querydb("aurin_richness")
     lustdata = querydb("lust_web")
