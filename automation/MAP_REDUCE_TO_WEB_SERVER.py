@@ -10,7 +10,7 @@ Team Members:
 '''
 # This script keeps checking for changes in view and
 # updates the web server databases when there is any change in the views
-#Takes IP of Database Server as Input
+#Takes IP of Database Server as Input as 
 import json
 import requests
 import couchdb
@@ -101,7 +101,7 @@ for item in suburb_dic:
 
 #this method returns the content of the input view as a dictionary
 def get_view_as_dic(view_name,db_name,design_name,group_level):
-	databaseURL = "http://%s:%s@%s/%s/_design/%s/_view/%s" % (USERNAME, PASSWORD,DATABASEADDRESS,db_name,design_name,view_name)
+	databaseURL = "http://%s:%s@%s:5984/%s/_design/%s/_view/%s" % (USERNAME, PASSWORD,DATABASEADDRESS,db_name,design_name,view_name)
 	headerss = {"Content-Type": "application/json"}
 	parameters= {'reduce': 'true', 'group_level':group_level}
 	count =0

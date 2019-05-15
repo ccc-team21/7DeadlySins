@@ -26,7 +26,7 @@ mult_fact = 10
 
 def write_couchdb(id, d):
 
-    databaseURL = "http://%s/%s"%(DATABASEADDRESS,DATABASENAME)
+    databaseURL = "http://%s:5984/%s"%(DATABASEADDRESS,DATABASENAME)
     headerss = {"Content-Type": "application/json"}
     response = requests.put(databaseURL + '/' + str(id), data=json.dumps(d), headers=headerss)
     print(response)
