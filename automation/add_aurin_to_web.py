@@ -2,21 +2,21 @@
 Team 21 Deadly Sin Analysis
 City: Melbourne
 Team Members:
-    Anupa Alex – 1016435
-    Luiz Fernando Franco - 1019613
-    Suraj Kumar Thakur - 999886
-    Waneya Iqbal - 919750
-    Yan Li – 984120
+    Anupa Alex : 1016435
+    Luiz Fernando Franco : 1019613
+    Suraj Kumar Thakur : 999886
+    Waneya Iqbal : 919750
+    Yan Li : 984120
 '''
 # this script adds the aurin data to the database
 
 import requests
 import json
 import couchdb
-
-USERNAME = 'user'
-PASSWORD = 'pass'
-DATABASEADDRESS='103.6.254.147:5984' #a.b.c.d:port
+import sys
+USERNAME = 'admin'
+PASSWORD = 'admin'
+DATABASEADDRESS=sys.argv[1] #a.b.c.d:port
 DATABASENAME = 'aurin_richness'
 #scale for the aurin data
 mult_fact = 10

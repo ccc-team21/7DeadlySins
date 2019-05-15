@@ -2,18 +2,20 @@
 Team 21 Deadly Sin Analysis
 City: Melbourne
 Team Members:
-    Anupa Alex – 1016435
-    Luiz Fernando Franco - 1019613
-    Suraj Kumar Thakur - 999886
-    Waneya Iqbal - 919750
-    Yan Li – 984120
+    Anupa Alex : 1016435
+    Luiz Fernando Franco : 1019613
+    Suraj Kumar Thakur : 999886
+    Waneya Iqbal : 919750
+    Yan Li : 984120
 '''
 # This script keeps checking for changes in view and
 # updates the web server databases when there is any change in the views
+#Takes IP of Database Server as Input
 import json
 import requests
 import couchdb
 import time
+import sys
 
 #seclaring variables used
 twitter_total_count_dic = {}
@@ -37,7 +39,7 @@ pride_count_view = 'count-pride'
 
 USERNAME = 'admin'
 PASSWORD = 'admin'
-DATABASEADDRESS='103.6.254.147:5984' 
+DATABASEADDRESS=sys.argv[1]
 TWITTER_DATABASENAME = 'twitter_streaming'
 INSTA_DATABASENAME = 'instagram_data'
 TWITTER_DESIGNNAME = 'Twitter_Analysis'

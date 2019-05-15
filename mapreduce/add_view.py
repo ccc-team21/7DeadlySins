@@ -2,19 +2,19 @@
 Team 21 Deadly Sin Analysis
 City: Melbourne
 Team Members:
-    Anupa Alex – 1016435
-    Luiz Fernando Franco - 1019613
-    Suraj Kumar Thakur - 999886
-    Waneya Iqbal - 919750
-    Yan Li – 984120
- '''
+    Anupa Alex : 1016435
+    Luiz Fernando Franco : 1019613
+    Suraj Kumar Thakur : 999886
+    Waneya Iqbal : 919750
+    Yan Li : 984120
+'''
 #This file adds all the views to the corresponding database
 from couchdb import design
 import couchdb
-	
+import sys
 USERNAME = 'admin'
 PASSWORD = 'admin'
-DATABASEADDRESS='103.6.254.147:5984' 
+DATABASEADDRESS=sys.argv[1]
 twitter_db_name = 'twitter_streaming'
 instagram_db_name = 'instagram_data'
 couch = couchdb.Server("http://%s:%s@%s" % (USERNAME, PASSWORD,DATABASEADDRESS))

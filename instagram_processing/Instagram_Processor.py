@@ -11,8 +11,8 @@ Team Members:
 #This script reads the data from a file which has Instagram data from the couchDB given in the Appendix of Project SPecification
 #Image is downloaded for each document and processed to find if it is adult content and also to count number of faces in each image.
 #After processing this data is added to the instagram_data database in Couch DB
-
-
+#Takes  IP of Database Server as Input, the input file should be of the form :instagram_$year_$n.json where year and n are passed as argument
+#Input :IP ,year,n
 import os
 import cv2
 import sys
@@ -27,9 +27,9 @@ import json
 import sys
 
 
-year = sys.argv[1]
-n = sys.argv[2]
-DB_SERVER = "172.26.38.106"
+year = sys.argv[2]
+n = sys.argv[3]
+DB_SERVER = sys.argv[1]
 #file where instagram data is saved
 f_name = '../data/instagram_%s_%s.json'%(year,n)
 len_file = os.path.getsize(f_name)

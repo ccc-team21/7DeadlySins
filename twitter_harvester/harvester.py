@@ -2,11 +2,11 @@
 Team 21 Deadly Sin Analysis
 City: Melbourne
 Team Members:
-    Anupa Alex – 1016435
-    Luiz Fernando Franco - 1019613
-    Suraj Kumar Thakur - 999886
-    Waneya Iqbal - 919750
-    Yan Li – 984120
+    Anupa Alex : 1016435
+    Luiz Fernando Franco : 1019613
+    Suraj Kumar Thakur : 999886
+    Waneya Iqbal : 919750
+    Yan Li : 984120
 '''
 
 #This script uses Twitter's streaming API for harvesting data from twitter based on location
@@ -40,7 +40,7 @@ auth.set_access_token(TWITTER_ACCESS_KEY,TWITTER_ACCESS_SECRET)
 
 print("Start time of script", time.time())
 MELB_GEOJSON = '../data/melb_geojson.json'
-DB_ADDRESS="172.26.38.10"
+DB_ADDRESS="variable set by ansible"
 #stop words to be used for processing text
 stop_words = set(stopwords.words('english'))
 # load GeoJSON file containing suburbs
