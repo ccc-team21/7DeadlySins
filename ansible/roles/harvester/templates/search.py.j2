@@ -1,0 +1,238 @@
+import json
+import sys
+# from geojson_utils import centroid
+import time
+
+import numpy as np
+import requests
+import tweepy
+from shapely.geometry import shape, Point, Polygon
+
+print("Start time of script", time.time())
+MELB_GEOJSON = '{{ mount_point }}/melb_geojson.json'
+
+#TWITTER KEYS
+TWITTER_APP_KEY='{{ keys[item.0|int % keys_length|int ].TWITTER_APP_KEY }}'
+TWITTER_APP_SECRET='{{ keys[item.0|int % keys_length|int ].TWITTER_APP_SECRET }}'
+TWITTER_ACCESS_KEY='{{ keys[item.0|int % keys_length|int ].TWITTER_ACCESS_KEY }}'
+TWITTER_ACCESS_SECRET='{{ keys[item.0|int % keys_length|int ].TWITTER_ACCESS_SECRET }}'
+
+# Replace the API_KEY and API_SECRET with your application's key and secret.
+auth = tweepy.AppAuthHandler(TWITTER_APP_KEY, TWITTER_APP_SECRET)
+
+api = tweepy.API(auth, wait_on_rate_limit=True,
+                 wait_on_rate_limit_notify=True)
+
+if (not api):
+    print("Can't Authenticate")
+    sys.exit(-1)
+
+# load GeoJSON file containing sectors
+with open(MELB_GEOJSON) as f:
+    js = json.load(f)
+
+suburb_dic = {}
+suburb_name_dic = {}
+for feature in js['features']:
+    suburb_dic[feature['properties']['cartodb_id']] = feature['properties']['name'].lower()
+    suburb_name_dic[feature['properties']['name'].lower()] = feature['properties']['cartodb_id']
+# print(suburb_name_dic)
+suburb_name_dic['melbourne'] = 122
+
+
+def get_suburb_frm_point(coord):
+    # print(coord)
+    suburb_id = -1
+    for feature in js['features']:
+        poly_coord = np.array(feature['geometry']['coordinates'][0][0])
+        poly_tup = [tuple(l) for l in poly_coord]
+        polygon = Polygon(poly_tup)
+        if coord.within(polygon):
+            suburb_id = feature['properties']['cartodb_id']
+            # print(suburb_id)
+            break
+
+    return suburb_id
+
+
+def get_suburb_frm_place(place):
+    places = place['bounding_box']['coordinates']
+    max_area = 0
+    max_area_sub_id = -1
+    for place in places:
+        place_polygon = Polygon(place)
+        for feature in js['features']:
+            suburb_polygon = shape(feature['geometry'])
+            if place_polygon.intersects(suburb_polygon):
+                area = place_polygon.intersection(suburb_polygon).area
+                if area > max_area:
+                    max_area = area
+                    max_area_sub_id = feature['properties']['cartodb_id']
+                    # print(feature['properties'])
+
+    return max_area_sub_id
+
+
+def get_suburb_id_frm_user_loc(user_loc):
+    # print(user_loc)
+    split_coma = user_loc.split(',')
+    # print(split_coma)
+    for item in split_coma:
+        # print()
+        if item.lower().strip() in suburb_name_dic:
+            return suburb_name_dic[item.lower().strip()]
+    split_space = user_loc.split(' ')
+    # print(split_space)
+    for item in split_space:
+        if item.lower().strip() in suburb_name_dic:
+            return suburb_name_dic[item.lower().strip()]
+    return -1
+
+
+def get_suburb_id(coord, user_loc):
+    suburb_id = -1
+    from_coord = False
+    # print(coord)
+    # print(user_loc)
+    according = None
+    if coord != None:
+        coord_list = coord['coordinates']
+        point = Point(coord_list[0], coord_list[1])
+        # print(point)
+        suburb_id = get_suburb_frm_point(point)
+        from_coord = True
+        according = "coordinates"
+    elif user_loc != None and suburb_id == -1:
+        suburb_id = get_suburb_id_frm_user_loc(user_loc)
+        according = "user_loc"
+    # print(suburb_id)
+
+    return suburb_id, from_coord, according
+
+
+# print(get_suburb_id(1,None))
+
+
+def process_tweet(tweet):
+    # print(tweet)
+    try:
+        d = {}
+        id_db = tweet['id']
+        d['hashtags'] = [hashtag['text'] for hashtag in tweet['entities']['hashtags']]
+        d['text'] = tweet['text']
+        d['coordinates'] = tweet['coordinates']
+        d['user_loc'] = tweet['user']['location']
+        d['source'] = 'location_search'
+        suburb_id, from_coord, according = get_suburb_id(tweet['coordinates'], tweet['user']['location'])
+        if suburb_id != -1:
+            d['suburb_id'] = suburb_id
+            d['from_coord'] = from_coord
+            d['according'] = according
+            return id_db, d
+        else:
+            return None, None
+    except Exception as e:
+        return None, None
+
+
+fName = 'tweets_search_geo.json'  # We'll store the tweets in a text file.
+
+f = open(fName, 'w')
+
+
+def write_couchdb(id, d):
+    # To store in Cluster 2 VM database
+    databaseURL = "http://{{ inventory_hostname }}:5984/twitter_streaming"
+    headerss = {"Content-Type": "application/json"}
+    response = requests.put(databaseURL + '/' + str(id), data=json.dumps(d), headers=headerss)
+    print(response.status_code)
+    # print("\n\n\n\n\n")
+
+    # To store in Waneya's personal VM database Address
+
+
+
+def search(geocode):
+    # print(geocode)
+
+    searchQuery = '*'  # this is what we're searching for
+    maxTweets = 10000000  # Some arbitrary large number
+    tweetsPerQry = 100  # this is the max the API permits
+
+    # If results from a specific ID onwards are reqd, set since_id to that ID.
+    # else default to no lower limit, go as far back as API allows
+    sinceId = None
+
+    # If results only below a specific ID are, set max_id to that ID.
+    # else default to no upper limit, start from the most recent tweet matching the search query.
+    max_id = -1
+    count = 0
+    tweetCount = 0
+    print("Downloading max {0} tweets".format(maxTweets))
+    # with open(fName, 'w') as f:
+    while tweetCount < maxTweets:
+
+        try:
+            new_tweets = api.search(q=searchQuery, count=tweetsPerQry, geocode=geocode)
+            # print(type(new_tweets))
+            if not new_tweets:
+                print("No more tweets found")
+                break
+            count = 0
+            for tweet in new_tweets:
+                # print("count=%d"%(count))
+                tweet_json = tweet._json
+                # print(tweet)
+                id_db, processed = process_tweet(tweet_json)
+                if processed != None:
+                    # print(processed['suburb_id'])
+                    # print(tweet['coordinates'] )
+                    write_couchdb(id_db, processed)
+                count += 1
+
+            # tweetCount += 100
+            # print("Downloaded {0} tweets".format(tweetCount))
+            max_id = new_tweets[-1].id
+        # sinceId = max_id
+        # print(new_tweets[0].id)
+        # print(new_tweets[-1].id)
+        except tweepy.TweepError as e:
+            # Just exit if any error
+            print("some error : " + str(e))
+            break
+    # print ("Downloaded {0} tweets, Saved to {1}".format(tweetCount, fName))
+
+geocode = "%f,%f,%fkm" % (-37.817457, 145.002606, 300)
+search(geocode)
+
+'''
+for feature in js['features']:
+	poly = {}
+	poly['coordinates'] = feature['geometry']['coordinates'][0]
+	#print(poly)
+	geometry = poly
+	centroid_suburb = centroid(poly)
+	#print(centroid_suburb)
+	centroid_coord = centroid_suburb['coordinates']
+
+	radius = 0
+	far_lat =0
+	far_lng =0
+	for poly_coord in poly['coordinates']:
+		#print(poly_coord)
+		for coord in poly_coord:
+			#print(centroid_coord)
+			#print(coord)
+			dis = distance(lonlat(centroid_coord[0],centroid_coord[1]), lonlat(coord[0],coord[1])).meters
+			if dis>radius:
+				radius = dis
+				far_lat = coord[1]
+				far_lng = coord[0]
+	
+	print("%s %d  %f %f %f" %( feature['properties']['name'],feature['properties']['cartodb_id'],centroid_coord[0],centroid_coord[1],radius))
+	#suburb_dic[feature['properties']['cartodb_id']]= feature['properties']['name']
+	print("%f %f "%(far_lat,far_lng))
+	geocode = "%f,%f,%fkm"%(centroid_coord[0],centroid_coord[1],radius)
+	search(geocode)
+	time.sleep(2)
+'''

@@ -1,0 +1,23 @@
+---
+# Creating databases in the couch db cluster
+- name: Add the database for twitter_streaming
+  shell: curl -XPUT "http://{{ admin_user }}:{{ admin_password }}@{{ groups.dbserver[0] }}:5984/twitter_streaming"
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"
+
+- name: Add the database for instagram data
+  shell: curl -XPUT "http://{{ admin_user }}:{{ admin_password }}@{{ groups.dbserver[0] }}:5984/instagram_data"
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"
+
+
+- name: Add the database for aurin_richness
+  shell: curl -XPUT "http://{{ admin_user }}:{{ admin_password }}@{{ groups.dbserver[0] }}:5984/aurin_richness"
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"
+
+- name: Add the database for pride_web
+  shell: curl -XPUT "http://{{ admin_user }}:{{ admin_password }}@{{ groups.dbserver[0] }}:5984/pride_web"
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"  
+
+
+- name: Add the database for lust_web
+  shell: curl -XPUT "http://{{ admin_user }}:{{ admin_password }}@{{ groups.dbserver[0] }}:5984/lust_web"
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"  

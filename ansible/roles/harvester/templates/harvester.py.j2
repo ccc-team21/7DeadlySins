@@ -1,0 +1,192 @@
+import tweepy
+from tweepy import Stream
+from tweepy.streaming import StreamListener
+import time
+import json
+from shapely.geometry import shape, Point, Polygon
+import requests
+import numpy as np
+print("Start time of script", time.time())
+MELB_GEOJSON = '{{ mount_point }}/melb_geojson.json'
+
+# TWITTER Credentials
+TWITTER_APP_KEY='{{ keys[item.0|int % keys_length|int ].TWITTER_APP_KEY }}'
+TWITTER_APP_SECRET='{{ keys[item.0|int % keys_length|int ].TWITTER_APP_SECRET }}'
+TWITTER_ACCESS_KEY='{{ keys[item.0|int % keys_length|int ].TWITTER_ACCESS_KEY }}'
+TWITTER_ACCESS_SECRET='{{ keys[item.0|int % keys_length|int ].TWITTER_ACCESS_SECRET }}'
+
+auth = tweepy.OAuthHandler(TWITTER_APP_KEY, TWITTER_APP_SECRET)
+auth.set_access_token(TWITTER_ACCESS_KEY,TWITTER_ACCESS_SECRET)
+
+# load GeoJSON file containing sectors
+with open(MELB_GEOJSON) as f:
+    js = json.load(f)
+
+
+suburb_dic = {}
+suburb_name_dic = {}
+for feature in js['features']:
+    suburb_dic[feature['properties']['cartodb_id']]= feature['properties']['name']
+    suburb_name_dic[feature['properties']['name'].lower()]= feature['properties']['cartodb_id']
+
+def get_suburb_frm_point(coord):
+    #print(coord)
+    suburb_id = -1
+    for feature in js['features']:
+        poly_coord = np.array(feature['geometry']['coordinates'][0][0])
+        poly_tup = [tuple(l) for l in poly_coord]
+        polygon = Polygon(poly_tup)
+        if coord.within(polygon):
+            suburb_id = feature['properties']['cartodb_id']
+            #print(suburb_id)
+            break
+        
+    return suburb_id
+
+def get_suburb_frm_place(place):
+    places = place['bounding_box']['coordinates']
+    max_area = 0 
+    max_area_sub_id = -1
+    for place in places:
+        place_polygon = Polygon(place)
+        for feature in js['features']:
+            suburb_polygon = shape(feature['geometry'])
+            if place_polygon.intersects(suburb_polygon):
+                area = place_polygon.intersection(suburb_polygon).area
+                if area>max_area:
+                    max_area = area
+                    max_area_sub_id = feature['properties']['cartodb_id']
+                    #print(feature['properties'])
+           
+
+    return max_area_sub_id
+            
+
+
+def get_suburb_id_frm_user_loc(user_loc):
+    #print(user_loc)
+    split_coma = user_loc.split(',')
+    #(split_coma)
+    for item in split_coma:
+        #print()
+        if item.lower().strip() in suburb_name_dic:
+            return suburb_name_dic[item.lower().strip()]
+    split_space = user_loc.split(' ')
+    #print(split_space)
+    for item in split_space:
+        if item.lower().strip() in suburb_name_dic:
+            return suburb_name_dic[item.lower().strip()]       
+    return -1
+
+def get_suburb_id(coord,user_loc):
+    suburb_id = -1
+    from_coord = False
+    #print(coord)
+    #print(user_loc)
+    according = None
+    if coord!=None:
+        coord_list = coord['coordinates']
+        point = Point(coord_list[0],coord_list[1])
+        #print(point)
+        suburb_id = get_suburb_frm_point(point)
+        from_coord = True
+        according = "coordinates"
+    elif user_loc!=None and suburb_id==-1:
+        suburb_id = get_suburb_id_frm_user_loc(user_loc)
+        according = "user_loc"
+    #print(suburb_id)
+
+    return suburb_id,from_coord,according
+
+
+#print(get_suburb_id(1,None))  
+     
+
+def process_tweet(tweet):  
+    #print(tweet)
+    d = {}
+    id_db = tweet['id']
+    d['hashtags'] = [hashtag['text'] for hashtag in tweet['entities']['hashtags']]
+    d['text'] = tweet['text']
+    d['coordinates'] = tweet['coordinates']
+    #d['place'] = tweet['place']
+    d['user_loc'] = tweet['user']['location']
+    d['source'] = 'stream'
+    suburb_id,from_coord,according = get_suburb_id(tweet['coordinates'],tweet['user']['location'])
+    if suburb_id!=-1:
+        d['suburb_id'] = suburb_id
+        d['from_coord'] = from_coord
+        d['according'] =  according
+        return id_db,d
+    else:
+        return None,None
+
+# this method adds file to the CouchDB.
+# Look at the use of http command PUT
+# and the use of tweet id. This filters
+# out duplicate tweets.
+def write_couchdb(id, d):
+
+    # Cluster 1  VM IP
+    databaseURL = "http://{{ inventory_hostname }}/twitter_streaming"
+    headerss = {"Content-Type": "application/json"}
+    response = requests.put(databaseURL + '/' + str(id), data=json.dumps(d), headers=headerss)
+    print(response.status_code)
+    #print(response.content)
+    #print("\n\n\n\n\n")
+
+
+
+
+    
+
+class MyListener(StreamListener):
+    def on_data(self, raw_data):
+        try:
+            tweet = json.loads(raw_data)
+            if tweet['coordinates'] !=None or tweet['place']!=None or tweet['user']['location']!=None:
+                id_db,processed_tweet = process_tweet(tweet)
+                if processed_tweet!=None:
+                    #print("id = ",id_db)
+                    #print("data =",processed_tweet)
+                    #print(processed_tweet['coordinates'])
+                    #print(processed_tweet['suburb_id'])
+                    #print(suburb_dic[processed_tweet['suburb_id']])
+                    #f1.write(json.dumps(process_tweet(tweet)))
+                    
+                    #print("\n\n\n\n\n")
+                    write_couchdb(id_db, processed_tweet)
+
+                #writer.writerow(list(process_tweet(tweet).values()))
+            else:
+                print("All none")
+                return True
+        except BaseException as e:
+            print(raw_data)
+            print("Error on_data:%s" % str(e))
+        return True
+        
+    def on_error(self, status_code):
+        if status_code == 420:
+            print(status_code)
+            print("ERROR: Rate limit reached")
+            print("Sleeping for 2 minutes")
+            time.sleep(120)
+            print("Resumed from sleeping")
+
+        return True
+
+    def on_timeout(self):
+        print("ERROR: Timeout...")
+        return True  # Don't kill the stream
+
+
+twitter_stream = Stream(auth, MyListener())
+
+# use filter to collect twitter information based on Australia field
+while True:
+    try:
+        twitter_stream.filter(locations=[{{ start_lng|float + (item.0|float * mult_fact|float) }},{{ start_lat }},{{ start_lng|float + ((item.0|float + 1|float) * mult_fact|float) }},{{ end_lat }}])
+    except Exception as e:
+        print(e)
+    pass

@@ -1,0 +1,193 @@
+<!--
+Team 21 Sentiment Analysis
+City: Melbourne
+Team Members:
+    Anupa Alex  1016435
+    Luiz Fernando Franco  1019613
+    Suraj Kumar Thakur  999886
+    Waneya Iqbal  919750
+    Yan Li  984120
+-->
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>CCC Project - Team 21: Line Chart</title>
+
+    <style type="text/css">
+
+        body {
+            font-family: verdana;
+            background-color: rgb(247, 247, 247);
+        }
+
+/* Display*/
+        #wrapper {
+            display: grid;
+            grid-gap: 1% 2%;
+            grid-template-rows: 100px 610px;
+            grid-template-columns: 23% 5% 17% 17% 5% 23%;
+            grid-template-areas:
+                "logo title title title title ."
+                "back chart chart chart chart ."
+        }
+
+        #container1 {
+            grid-area: logo;
+            text-align: left;
+            padding: 5px;
+            padding-left: 20px;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #container2 {
+            grid-area: title;
+            color: blue;
+            text-align: center;
+            top: 0px;
+            margin-top: 0px;
+            padding-top: 5px;
+            font-size: 40px;
+            font-weight: bold;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #container3 {
+            grid-area: back;
+            margin-top: 250px;
+            text-align: center;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #main {
+            grid-area: chart;   
+            color: blue;
+            text-align: center;
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: 0;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        .button {
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 15px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body style="height: 100%; margin: 0">
+
+    <div id="wrapper">
+
+<!-- Logo -->
+        <div id="container1" class="one">
+            
+            <img src="/static/Unimelb.jpeg" width="160" , height="150">
+
+        </div>
+
+<!-- Title -->
+        <div id="container2" class="two">
+
+            <section>Richness vs. Lust vs. Pride <br> Line Chart</section>
+
+        </div>
+
+<!-- Left Button -->
+        <div id="container3" class="three">
+
+            <a href="http://:5000/map" class="button"><< Map</a>
+
+        </div>
+
+<!-- Line Chart --> 
+        <div id="main">
+        </div>
+
+    </div>
+
+<!-- Echarts JS Line Chart --> 
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
+    </script>
+
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var aurindata = {{ aurindata }};
+
+        var lustdata = {{ lustdata }};
+
+        var pridedata = {{ pridedata }};
+
+        var xlabel = {{ xlabel|safe }};
+
+
+        var option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Richness(AURIN)', 'Lust Factor(SOCIALMEDIA)', 'Pride Factor(SOCIALMEDIA)'],
+                top: 40
+            },
+            grid: {
+                top: '15%',
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: xlabel
+            },
+            yAxis: {
+                type: 'value'
+            },
+
+            series: [
+                {
+                    name: 'Richness(AURIN)',
+                    type: 'line',
+                    stack: 'score',
+                    data: aurindata
+                },
+                {
+                    name: 'Lust Factor(SOCIALMEDIA)',
+                    type: 'line',
+                    stack: 'score',
+                    data: lustdata
+                },
+
+                {
+                    name: 'Pride Factor(SOCIALMEDIA)',
+                    type: 'line',
+                    stack: 'score',
+                    data: pridedata
+                }]
+        };
+
+        myChart.setOption(option);
+    </script>
+
+</body>
+
+</html>

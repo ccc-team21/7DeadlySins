@@ -1,0 +1,24 @@
+- name: Adding the proxy configuration to all servers
+  blockinfile:
+      dest: /etc/environment
+      insertafter: EOF
+      content: |
+        http_proxy="{{ http_proxy }}"
+        https_proxy="{{ https_proxy }}"
+        ftp_proxy="{{ ftp_proxy }}"
+        no_proxy="{{ no_proxy }}"
+
+- name: Update yum cache 
+  yum:
+    update_cache: yes
+
+- name: Install the required dependencies
+  yum:
+    name: python-pip
+    state: latest
+
+- name: Update pip 
+  pip:
+    name: ['pip']
+    state: latest
+

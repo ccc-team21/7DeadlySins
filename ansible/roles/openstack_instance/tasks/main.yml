@@ -1,0 +1,33 @@
+---
+#Tasks to write the instance creation
+#----------------------- Production------------ -----
+- name: Create an instance for webserver
+  os_server:
+    name: server_{{ count + 1 }}
+    image: '{{ instance_image }}'
+    key_name: '{{ instance_key }}'
+    flavor: '{{ instance_flavour }}'
+    availability_zone: '{{ availability_zone }}'
+    security_groups: '{{ securitygroups_webserver }}'
+    auto_floating_ip: yes
+    wait: yes
+    timeout: 600
+    state: present
+- name: Create instances for dbserver
+  os_server:
+    name: server_{{ item }}
+    image: '{{ instance_image }}'
+    key_name: '{{ instance_key }}'
+    flavor: '{{ instance_flavour }}'
+    availability_zone: '{{ availability_zone }}'
+    security_groups: '{{ securitygroups_dbserver }}'
+    auto_floating_ip: yes
+    wait: yes
+    timeout: 600
+    state: present
+  with_sequence: 
+    count={{ count }}
+
+
+
+# ------------------------------------ end of production ---------------

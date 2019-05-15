@@ -1,0 +1,53 @@
+---
+- hosts: localhost
+  vars_files:
+  - host_vars/main.yml
+  
+  gather_facts: true
+  
+  roles:
+  - openstack_common
+  - openstack_security
+  - openstack_instance
+  - openstack_volume
+  - openstack_os
+
+
+- name: Wait for port 22 to be ready
+  hosts: all
+  gather_facts: False
+  roles:
+  - checkssh
+
+- hosts: all
+  vars_files:
+  - host_vars/main.yml
+  become: true
+  roles:
+  - prerequisite  
+  - filesystem
+
+- hosts: dbserver
+  vars_files:
+  - host_vars/main.yml
+  become: true
+  roles:   
+  - couchdb
+  - create_dbs
+
+
+
+
+- hosts: harvester
+  become: true
+  vars_files:
+  - host_vars/main.yml
+  roles:   
+  - harvester
+
+- hosts: webserver
+  vars_files:
+  - host_vars/main.yml
+  become: true
+  roles:   
+  - webserver

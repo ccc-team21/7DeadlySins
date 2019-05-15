@@ -1,0 +1,6 @@
+#Vars
+
+filesystem_vars:
+  - filesystem_device: /dev/vdb
+    filesystem_mountpoint: /opt
+    filesystem_fstype: ext4

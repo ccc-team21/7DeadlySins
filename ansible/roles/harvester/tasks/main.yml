@@ -1,0 +1,65 @@
+---
+
+- name: Install python libraries
+  pip:
+    name: "{{ packages }}"
+    state: latest
+
+ 
+- name: Copy the harvester and automation files 
+  copy:
+    src: ../files/{{ item.src }}
+    dest: "{{ item.dest }}"
+    mode: 0755
+    owner: ec2-user
+    group: ec2-user
+  with_items:
+    - {src: 'add_aurin_to_web.py' , dest: '{{ mount_point }}/add_aurin_to_web.py'}
+    - {src: 'add_view.py' , dest: '{{ mount_point }}/add_view.py'}
+    - {src: 'aurin.json' , dest: '{{ mount_point }}/aurin.json'}
+    - {src: 'MAP_REDUCE_TO_WEB_SERVER.py' , dest: '{{ mount_point }}/MAP_REDUCE_TO_WEB_SERVER.py'}
+    - {src: 'melb_geojson.json' , dest: '{{ mount_point }}/melb_geojson.json'}
+
+
+- name: Copy the harvester script file
+  template:
+    src: ../templates/harvester.py.j2
+    dest: '{{mount_point}}/harvester.py'
+    mode: 0755
+    owner: ec2-user
+    group: ec2-user
+  when: inventory_hostname == groups.harvester[{{ item.0 }}]
+  with_indexed_items: "{{ groups.harvester }}"
+
+
+
+
+- name: Copy the search script file
+  template:
+    src: ../templates/search.py.j2
+    dest: '{{mount_point}}/search.py'
+    mode: 0755
+    owner: ec2-user
+    group: ec2-user
+  when: inventory_hostname == groups.harvester[{{ item.0 }}]
+  with_indexed_items: "{{ groups.harvester }}"  
+
+
+- name: Executing the harvester
+  shell: nohup /usr/bin/python {{ mount_point }}/harvester.py  >> {{ mount_point }}/log_search.out 2>&1 &
+
+
+- name: Executing the search script
+  shell: nohup /usr/bin/python {{ mount_point }}/search.py >> {{ mount_point }}/log_search.out 2>&1 &
+
+- name: Executing the add_aurin_to_web.py
+  shell: nohup /usr/bin/python {{ mount_point }}/add_aurin_to_web.py "{{ inventory_hostname }}" 2>&1 &
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"
+
+- name: Executing the add_view.py
+  shell: nohup /usr/bin/python {{ mount_point }}/add_view.py "{{ inventory_hostname }}" 2>&1 &
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"
+
+- name: Executing the MAP_REDUCE_TO_WEB_SERVER.py
+  shell: nohup /usr/bin/python {{ mount_point }}/MAP_REDUCE_TO_WEB_SERVER.py "{{ inventory_hostname }}" 2>&1 &
+  when: inventory_hostname == "{{ groups.dbserver[0] }}"

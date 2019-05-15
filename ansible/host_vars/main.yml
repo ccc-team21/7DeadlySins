@@ -1,0 +1,102 @@
+---
+#This file contains all variables used by the playbooks and roles
+#Common
+availability_zone: melbourne-qh2-uom
+
+
+vol_size: 10    
+
+#Security Groups Creations:
+
+security_groups:
+  - name: project_ssh
+    description: Security group for ssh port 22
+  - name: project_http_https
+    description: Securitygroup for http port 80, and https port 443
+  - name: project_couchdb
+    description: Security group for couchdb ports 5984,5984,9100,4369
+  - name: project_webserver
+    description: Security group for webserver port 5000
+  - name: project_icmp
+    description: Security group for icmp request like ping
+
+# security group rules addition 
+security_groups_rules:
+  - name: project_ssh
+    description: "Demo security group for ssh"
+    protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    remote_ip_prefix: 0.0.0.0/0
+  - name: project_http_https
+    description: "Demo security group for https"
+    protocol: tcp
+    port_range_min: 443
+    port_range_max: 443
+    remote_ip_prefix: 0.0.0.0/0
+  - name: project_http_https
+    description: "Demo security group for https"
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0
+  - name: project_couchdb
+    description: "Demo security group for couchdb"
+    protocol: tcp
+    port_range_min: 5984
+    port_range_max: 5984
+    remote_ip_prefix: 0.0.0.0/0  
+  - name: project_couchdb
+    description: "Demo security group for couchdb"
+    protocol: tcp
+    port_range_min: 5986
+    port_range_max: 5986
+    remote_ip_prefix: 0.0.0.0/0 
+  - name: project_couchdb
+    description: "Demo security group for couchdb"
+    protocol: tcp
+    port_range_min: 4369
+    port_range_max: 4369
+    remote_ip_prefix: 0.0.0.0/0 
+  - name: project_couchdb
+    description: "Demo security group for couchdb"
+    protocol: tcp
+    port_range_min: 9110
+    port_range_max: 9110
+    remote_ip_prefix: 0.0.0.0/0 
+  - name: project_webserver
+    description: "Demo security group for couchdb"
+    protocol: tcp
+    port_range_min: 5000
+    port_range_max: 5000
+    remote_ip_prefix: 0.0.0.0/0   
+  - name: project_icmp
+    description: "Demo security group for icmp request like ping"
+    protocol: icmp
+    port_range_min: -1
+    port_range_max: -1
+    remote_ip_prefix: 0.0.0.0/0 
+
+#Instance creation variable:
+
+#instance_name: demo_ans_3
+instance_image: 156f4c28-d42d-45a7-8625-616ce5b91392
+#instance_image: 0a2bac09-8beb-464a-9cbc-6adf4dfcd5e5
+instance_key: testKey
+instance_flavour: uom.mse.2c9g
+securitygroups_dbserver: ['project_ssh','project_http_https','project_couchdb','project_icmp']
+securitygroups_webserver: ['project_ssh','project_http_https','project_webserver','project_icmp']
+
+
+# This variable is for no of couch db cluster nodes 
+count: 3
+
+# Username and Password for the couchdb cluster
+admin_user: admin
+admin_password: admin
+
+# Filesystem mount point 
+
+mount_point: /opt
+device_name: /dev/vdb
+

@@ -1,0 +1,11 @@
+# tasks to check the ssh connection is active 
+- name: Checking ssh ports on all created instances 
+  wait_for:
+    port: 22
+    host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+    search_regex: OpenSSH
+    delay: 10
+    timeout: 300
+  connection: local
+
+

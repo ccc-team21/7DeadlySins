@@ -1,0 +1,64 @@
+---
+# Task for webserver
+
+
+- name: Install python libraries
+  pip:
+    name: "{{ packages }}"
+    state: latest
+
+
+- name: Ensure the directory to be created exists
+  stat:
+    path: "{{ item }}"
+  register: directory_stats
+  with_items:
+    - "{{ webserver_dirs }}"
+
+
+- name: Create Directory 
+  file:
+    path: "{{ item.item }}"
+    recurse: yes
+    state: directory
+    mode: 0755
+    owner: ec2-user
+    group: ec2-user
+  when: item.stat.exists == false
+  with_items:
+    - "{{ directory_stats.results }}"
+
+
+- name: Copy the webserver files 
+  copy:
+    src: ../files/{{ item.src }}
+    dest: "{{ item.dest }}"
+    mode: 0755
+    owner: ec2-user
+    group: ec2-user
+  with_items:
+    - {src: 'Angel.jpeg' , dest: '{{ mount_point }}/webserver/static/Angel.jpeg'}
+    - {src: 'melb_geojson.json' , dest: '{{ mount_point }}/webserver/static/melb_geojson.json'}
+    - {src: 'Devil.jpeg' , dest: '{{ mount_point }}/webserver/static/Devil.jpeg'}
+    - {src: 'Unimelb.jpeg' , dest: '{{ mount_point }}/webserver/static/Unimelb.jpeg'}
+    - {src: 'map.html' , dest: '{{ mount_point }}/webserver/templates/map.html'}
+    - {src: 'linechart.html' , dest: '{{ mount_point }}/webserver/templates/linechart.html'}
+
+- name: Copy the webapp script file
+  template:
+    src: ../templates/{{ item.src }}
+    dest: "{{ item.dest }}"
+    mode: 0755
+    owner: ec2-user
+    group: ec2-user
+  with_items:
+    - {src: 'webapp.py.j2' , dest: '{{ mount_point }}/webserver/webapp.py'}
+    - {src: 'index.html.j2' , dest: '{{ mount_point }}/webserver/templates/index.html'}
+    # - {src: 'map.html.j2' , dest: '{{ mount_point }}/webserver/templates/map.html'}
+    # - {src: 'linechart.html.j2' , dest: '{{ mount_point }}/webserver/templates/linechart.html'}
+
+
+
+- name: Run the webapp
+  shell: nohup /usr/bin/python {{ mount_point }}/webserver/webapp.py >> {{ mount_point }}/log_web.out 2>&1 &
+

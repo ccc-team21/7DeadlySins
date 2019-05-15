@@ -1,0 +1,78 @@
+---
+# Couch DB cluster
+
+- name: Copy the couchdb repo files
+  copy:
+    src: ../files/repo
+    dest: /etc/yum.repos.d/bintray-apache-couchdb-rpm.repo
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Update the yum cache 
+  yum:
+    update_cache: yes
+    
+- name: Install the epel repo
+  yum:
+    name: epel-release
+
+- name: Install couchdb and erlang package
+  yum:
+    name: "{{ couchdb_packages }}"
+    state: latest
+
+- name: Change node name in vm.args
+  replace:
+    dest: /opt/couchdb/etc/vm.args
+    regexp: '^-name couchdb@127.0.0.1'
+    replace: '-name couchdb@{{ansible_host}}'
+
+- name: Set Cookie
+  replace:
+    dest: /opt/couchdb/etc/vm.args
+    regexp: '^-setcookie monster$'
+    replace: '-setcookie {{ magic_cookie }}'
+
+- name: Bind Cluster Address to 0.0.0.0
+  lineinfile:
+    dest: /opt/couchdb/etc/local.ini
+    insertafter: '^\[chttpd\]$'
+    line: 'bind_address = {{ bind_address }}'
+
+- name: Add Admin User
+  lineinfile:
+    dest: /opt/couchdb/etc/local.ini
+    insertafter: '^\[admins\]$'
+    line: '{{ admin_user }} = {{ admin_password }}'
+
+- name: Change the sharding and replication factors
+  blockinfile:
+      dest: /opt/couchdb/etc/local.ini
+      insertafter: EOF
+      content: |
+        [cluster]
+        q={{ count }}
+        n={{ replication_factor }}
+
+- name: Fixing a port for communication with other nodes
+  blockinfile:
+      dest: /opt/couchdb/etc/vm.args
+      insertafter: EOF
+      content: |
+        -kernel inet_dist_listen_min {{ communicator_port }}
+
+- name: Enable CouchDB Service
+  systemd:
+    daemon-reload: yes
+    name: couchdb
+    enabled: yes
+
+- name: Start CouchDB Service
+  systemd:
+    name: couchdb
+    state: started
+
+- include: configure-cluster.yaml
+  
+

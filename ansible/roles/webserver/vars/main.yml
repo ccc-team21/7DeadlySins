@@ -1,0 +1,6 @@
+webserver_dirs:
+  - '{{ mount_point }}/webserver/static'
+  - '{{ mount_point }}/webserver/templates'
+
+packages: ['flask', 'couchdb','flask_restful']
+

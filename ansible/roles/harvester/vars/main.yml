@@ -1,0 +1,27 @@
+
+packages: ['tweepy', 'shapely', 'requests', 'numpy', 'geopy', 'jsonpickle', 'couchdb']
+
+start_lng: 144.57
+end_lng: 145.53
+diff_lng: "{{ end_lng - start_lng }}"
+mult_fact: "{{ diff_lng|float / count|float }}"
+
+start_lat: -38.45
+end_lat: -37.38
+
+
+keys:
+  - TWITTER_APP_KEY: 'f84UVX4t92bGYqsUdUhw5SQA6'
+    TWITTER_APP_SECRET: 'bGkF9zg0DNW9d5oeNtMsxf9UcUldeKQtqSkKu4hJZ2A5sgXi8I'
+    TWITTER_ACCESS_KEY: '1956378888-g932eG0VIrBGSZ7CUaBegVF1JfNYMYBfu6Zsi37'
+    TWITTER_ACCESS_SECRET: '0XNLuMW1grsbGvDgBLWekLMBFdD3xqkBhyHgPMuKVJO0C'
+  - TWITTER_APP_KEY: '8r5I2kHD90M9LrjYLyzCpT5Ub'
+    TWITTER_APP_SECRET: 'qCi4zLj8whxYbN6ixWgbl22Xgw4DPhyf9ldVnfcYvlSpYpguMX'
+    TWITTER_ACCESS_KEY: '100484448-DT1U7MBwNdMLvYV9WUo8mnZFnvi7c2WKg74hW995' 
+    TWITTER_ACCESS_SECRET: 'wgpsBFYZreHny91RjlE74I9nGMT35EgYqDqIwTt941tda'
+  - TWITTER_APP_KEY: 'EjELnOpId936zz5prg7HVYAoP'
+    TWITTER_APP_SECRET: 'bDy4TxWjtL2DFnrNOcKUG1YrylxNH6OyrKsyEb2Co8yKwCe1tZ'
+    TWITTER_ACCESS_KEY: '2975640536-FxEnyWtQfP4jAbqk987xByhBO9D8K8qLFMUUENy'
+    TWITTER_ACCESS_SECRET: 'ZQXhN5ifS97V93glnd7x7IqALmChdQJpAE8xezC38R1KN'
+
+keys_length: "{{ keys|length }}"

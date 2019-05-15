@@ -1,0 +1,9 @@
+magic_cookie: "Loving ansible"
+
+bind_address: 0.0.0.0
+
+replication_factor: 2
+
+couchdb_packages: ['couchdb', 'erlang']
+
+communicator_port: 9110

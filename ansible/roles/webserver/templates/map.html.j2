@@ -1,0 +1,262 @@
+<!--
+Team 21 Sentiment Analysis
+City: Melbourne
+Team Members:
+    Anupa Alex  1016435
+    Luiz Fernando Franco  1019613
+    Suraj Kumar Thakur  999886
+    Waneya Iqbal  919750
+    Yan Li  984120
+-->
+<!DOCTYPE html>
+
+<html style="height: 100%">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>CCC Project - Team 21: Map</title>
+
+    <style type="text/css">
+        body {
+            font-family: verdana;
+            background-color: rgb(247, 247, 247);
+        }
+
+/* Display*/
+        #wrapper {
+            display: grid;
+            grid-gap: 1% 2%;
+            grid-template-rows: 100px 610px;
+            grid-template-columns: 23% 5% 17% 17% 5% 23%;
+            grid-template-areas:
+                "logo title title title title ."
+                "back map map map map chart"
+        }
+
+        #container1 {
+            grid-area: logo;
+            text-align: left;
+            padding: 5px;
+            padding-left: 20px;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #container2 {
+            grid-area: title;
+            color: blue;
+            text-align: center;
+            top: 0px;
+            margin-top: 0px;
+            padding-top: 5px;
+            font-size: 40px;
+            font-weight: bold;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #container3 {
+            grid-area: chart;
+            margin-top: 260px;
+            text-align: center;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #container4 {
+            grid-area: back;
+            margin-top: 250px;
+            text-align: center;
+            /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        }
+
+        #main {
+            grid-area: map;
+            color: blue;
+            text-align: center;
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: 0;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+        }
+
+        .button {
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 15px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body style="height: 100%; margin: 0">
+
+    <div id="wrapper">
+
+<!-- Logo -->
+        <div id="container1" class="one">
+
+            <img src="/static/Unimelb.jpeg" width="160" , height="150">
+
+        </div>
+
+<!-- Title -->
+        <div id="container2" class="two">
+
+            <section>Richness vs. Lust vs. Pride <br> Map</section>
+
+        </div>
+
+<!-- Right Button -->
+        <div id="container3" class="three">
+
+            <a href="http://{{ inventory_hostname }}:5000/linechart" class="button">Chart >></a>
+
+        </div>
+
+<!-- Left Button -->
+        <div id="container4" class="four">
+
+            <a href="http://{{ inventory_hostname }}:5000/" class="button">
+                << Back</a> 
+
+        </div> 
+
+<!-- Map -->
+        <div id="main" style="height: 100%">
+        </div>
+
+    </div>
+
+<!-- Echarts JS Map -->
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js">
+    </script>
+
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js">
+    </script>
+
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        myChart.showLoading();
+
+        var aurindata = JSON.parse('{{ aurindata | tojson | safe }}');
+        var lustdata = JSON.parse('{{ lustdata | tojson | safe }}');
+        var pridedata = JSON.parse('{{ pridedata | tojson | safe }}');
+
+        $.get('/static/melb_geojson.json', function (geoJson) {
+            myChart.hideLoading();
+
+            echarts.registerMap('melb_geojson', geoJson);
+
+            option = {
+                tooltip: {
+                    trigger: 'item',
+                    showDelay: 0,
+                    transitionDuration: 0.2,
+                    formatter: function (params) {
+                        var value = params.value;
+                        return params.seriesName + '<br/>' + params.name + ': ' + value;
+                    }
+                },
+                legend: {
+                    data: ['Richness(AURIN)', 'Lust Factor(SOCIALMEDIA)', 'Pride Factor(SOCIALMEDIA)'],
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 10
+                },
+
+                visualMap: [{
+                    type: 'continuous',
+                    left: 'left',
+                    min: 1,
+                    max: 10,
+                    seriesIndex: 0,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    },
+                    text: ['High', 'Low'],
+                    calculable: false,
+                    left: 100,
+                    bottom: 50
+                },
+
+                {
+                    type: 'continuous',
+                    show: false,
+                    left: 'left',
+                    min: 1,
+                    max: 5,
+                    seriesIndex: 1,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    },
+                    text: ['High', 'Low'],
+                    calculable: true,
+                    left: 80,
+                    bottom: 50
+                },
+                {
+                    type: 'continuous',
+                    show: false,
+                    left: 'left',
+                    min: 1,
+                    max: 5,
+                    seriesIndex: 2,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    },
+                    text: ['High', 'Low'],
+                    calculable: true,
+                    left: 130,
+                    bottom: 50
+                }],
+
+                series: [
+                    {
+                        name: 'Richness(AURIN)',
+                        type: 'map',
+                        roam: true,
+                        mapType: 'melb_geojson',
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
+                        },
+                        data: aurindata
+                    },
+                    {
+                        name: 'Lust Factor(SOCIALMEDIA)',
+                        type: 'map',
+                        roam: true,
+                        mapType: 'melb_geojson',
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
+                        },
+                        data: lustdata
+                    },
+                    {
+                        name: 'Pride Factor(SOCIALMEDIA)',
+                        type: 'map',
+                        roam: true,
+                        mapType: 'melb_geojson',
+                        itemStyle: {
+                            emphasis: { label: { show: true } }
+                        },
+                        data: pridedata
+                    }]
+            };
+
+            myChart.setOption(option);
+        });
+        
+    </script>
+
+</body>
+
+</html>

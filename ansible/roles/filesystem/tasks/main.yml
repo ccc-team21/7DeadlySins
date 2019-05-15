@@ -1,0 +1,48 @@
+---
+# Create filesystem on all servers
+
+- name: Format the filesystem
+  filesystem:
+    fstype: "{{ item.filesystem_fstype }}"
+    dev: "{{ item.filesystem_device }}"
+  when: item.filesystem_device is defined
+  with_items:
+    - "{{ filesystem_vars }}"
+
+
+- name: Ensure if the directory to be created already exists
+  stat:
+    path: "{{ item.filesystem_mountpoint }}"
+  register: directory_stats
+  with_items:
+    - "{{ filesystem_vars }}"
+  
+
+- name: Create Directory 
+  file:
+    path: "{{ item.item.filesystem_mountpoint }}"
+    recurse: yes
+    state: directory
+    mode: 0755
+    owner: ec2-user
+    group: ec2-user
+  when: item.stat.exists == false
+  with_items:
+    - "{{ directory_stats.results }}"
+
+- name: Mount device on the filesystem
+  mount:
+    path: "{{ item.filesystem_mountpoint }}"
+    src: "{{ item.filesystem_device }}"
+    fstype: "{{ item.filesystem_fstype }}"
+    state: mounted
+  when: item.filesystem_device is defined
+  with_items:
+    - "{{ filesystem_vars }}"
+
+- name: Changing ownership of mounted folder to ec2-user
+  file:
+    path: "{{ mount_point }}"
+    owner: ec2-user
+    group: ec2-user
+    mode: 0755

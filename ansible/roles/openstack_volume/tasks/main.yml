@@ -1,0 +1,28 @@
+---
+# # Tasks for creation of volume
+
+# --------------- Production 
+
+- name: Create volume for the instances
+  os_volume:
+    display_name: vol_{{ item }}
+    size: '{{ vol_size }}'
+    availability_zone: '{{ availability_zone }}'
+    wait: yes
+    timeout: 600
+    state: present
+  register: os_vol
+  with_sequence:
+    count={{ count + 1 }}
+
+
+- name: Attaching the volume to the instances
+  os_server_volume:
+    state: present
+    server: server_{{ item }}
+    volume: vol_{{ item }}
+    device: "{{ device_name }}"
+  with_sequence:
+    count={{ count + 1 }}
+
+# -------------- end production ------------------    

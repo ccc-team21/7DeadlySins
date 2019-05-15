@@ -1,0 +1,183 @@
+<!--
+Team 21 Sentiment Analysis
+City: Melbourne
+Team Members:
+    Anupa Alex  1016435
+    Luiz Fernando Franco  1019613
+    Suraj Kumar Thakur  999886
+    Waneya Iqbal  919750
+    Yan Li  984120
+-->
+
+<!DOCTYPE html>
+
+<html style="height: 100%">
+
+<head>
+
+	<meta charset="utf-8">
+
+	<title>CCC Project - Team 21</title>
+
+	<style type="text/css">
+
+		body {
+			font-family: verdana;
+			background-color: rgb(247, 247, 247);
+		}
+
+/* Display*/
+		#wrapper {
+			display: grid;
+			grid-gap: 1% 1%;
+			grid-template-rows: 215px 200px 60px 50px 100px;
+			grid-template-columns: 25% 15% 15% 15% 25%;
+			grid-template-areas:
+				"devil logo logo logo angel"
+				"devil title title title angel"
+				"devil description description description angel"
+				"devil selection selection selection angel"
+				". . story . ."
+
+
+		}
+
+		#container1 {
+			grid-area: logo;
+			padding: 10px;
+			text-align: center;
+			/*border: 1px solid rgba(0, 0, 0, 0.8);*/
+		}
+
+		#container2 {
+			grid-area: title;
+			color: blue;
+			text-align: center;
+			margin-top: 0;
+			/*border: 1px solid rgba(0, 0, 0, 0.8);*/
+		}
+
+		#container3 {
+			grid-area: description;
+			color: black;
+			font-size: 1.3em;
+			text-align: center;
+			/*border: 1px solid rgba(0, 0, 0, 0.8);*/
+		}
+
+		#container4 {
+			grid-area: selection;
+			color: blue;
+			font-size: 30px;
+			padding: 10px;
+			font-weight: bold;
+			text-align: center;
+			/*border: 1px solid rgba(0, 0, 0, 0.8);*/
+		}
+
+		#container5 {
+			grid-area: story;
+			text-align: center;
+			/*border: 1px solid rgba(0, 0, 0, 0.8);*/
+		}
+
+		#container6 {
+			grid-area: pride;
+			text-align: center;
+			border: 1px solid rgba(0, 0, 0, 0.8);
+		}
+
+		#container7 {
+			grid-area: devil;
+			padding: 70px 0;
+			text-align: center;
+			/*border: 1px solid rgba(0, 0, 0, 0.8);*/
+		}
+
+		#container8 {
+			grid-area: angel;
+			padding: 70px 0;
+			text-align: center;
+			/*border: 1px solid rgba(0, 0, 0, 0.8);*/
+		}
+
+		.button {
+			background-color: blue;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 24px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+	<div id="wrapper">
+
+<!-- Logo -->
+		<div id="container1" class="one">
+
+			<img src="/static/Unimelb.jpeg" width="215" , height="200">
+
+		</div>
+
+<!-- Title -->
+		<div id="container2" class="two">
+
+			<h1>Cluster and Cloud Computing Assignment 2 <br>
+				#TheDeadlySins #2019 <br>
+				Team 21
+			</h1>
+
+		</div>
+
+<!-- Project Description -->
+		<div id="container3" class="three">
+
+			<section>The focus of this project is to explore how difficult it is for a rich man from Melbourne to enter the Kingdom of Heaven.
+			</section>
+
+		</div>
+
+<!-- Project Description -->
+		<div id="container4" class="four">
+
+			<section>Go to</section>
+
+		</div>
+
+<!-- Button -->
+		<div id="container5" class="five">
+
+			<a href="http://{{ inventory_hostname }}:5000/map" class="button">Story</a>
+
+		</div>
+
+<!-- Devil Image -->
+		<div id="container7" class="seven">
+
+			<img src="/static/Devil.jpeg" width="300" , height="500">
+
+		</div>
+
+<!-- Angel Image -->
+		<div id="container8" class="eight">
+
+			<img src="/static/Angel.jpeg" width="300" , height="500">
+
+		</div>
+
+	</div>
+	
+</body>
+
+</html>
